@@ -1,16 +1,25 @@
-console.log('main.js');
-(() => {
-    console.log('Here we are!')
-    window.addEventListener("load", (event) => {
-        const multiplier = document.getElementById( 'multiplier' );
-        const multiplicand = document.getElementById( 'multiplicand' );
-        const product = document.getElementById( 'product' );
+function calculate() {
+  const num1 = parseFloat(document.getElementById("num1").value);
+  const num2 = parseFloat(document.getElementById("num2").value);
+  const operation = document.getElementById("operation").value;
+  let result;
 
-        const update = () => {
-            product.innerHTML = parseFloat( multiplier.value ) * parseFloat( multiplicand.value );
-        };
+  switch (operation) {
+    case "add":
+      result = num1 + num2;
+      break;
+    case "subtract":
+      result = num1 - num2;
+      break;
+    case "multiply":
+      result = num1 * num2;
+      break;
+    case "divide":
+      result = num2 !== 0 ? num1 / num2 : "Error: Division by zero";
+      break;
+    default:
+      result = "Invalid operation";
+  }
 
-        multiplier.addEventListener("input", update);
-        multiplicand.addEventListener("input", update);
-    });      
-})();
+  document.getElementById("result").textContent = result;
+}

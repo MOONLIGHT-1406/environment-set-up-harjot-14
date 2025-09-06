@@ -1,29 +1,103 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Multiplication Calculator</title>
-    <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css">
-  </head>
-  <body>
-    <header>
-      <h1>DGL 213 Caluclator</h1>
-      <p>Multiplication</p>
-    </header>
-  
-    <main>
-      <input type="text" id="multiplier" value="2">
-      X 
-      <input type="text" id="multiplicand" value="2">
-      = 
-      <span id="product">4</span>
-    </main>
-  
-    <footer>
-      <p>Multiplication Calculator.</p>
-    </footer>
+<head>
+  <meta charset="utf-8" />
+  <title>Simple Calculator</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial; margin: 2rem; }
+    label { display:block; margin-top: .75rem; }
+    input, select, button { font-size: 1rem; padding: .5rem; }
+    #result { margin-top: 1rem; font-weight: 600; }
+    .error { color: #b00020; }
+  </style>
+</head>
+<body>
+  <h2>Simple Calculator</h2>
 
-    <script src="main.js"></script>
-  </body>
+  <form id="calcForm" novalidate>
+    <label for="a">First number</label>
+    <input id="a" name="a" type="number" step="any" required />
+
+    <label for="b">Second number</label>
+    <input id="b" name="b" type="number" step="any" required />
+
+    <label for="op">Operation</label>
+    <select id="op" name="op">
+      <option value="+">Addition (+)</option>
+      <option value="-">Subtraction (-)</option>
+      <option value="*">Multiplication (×)</option>
+      <option value="/">Division (÷)</option>
+    </select>
+
+    <div style="margin-top: 1rem;">
+      <button type="submit">Calculate</button>
+      <button type="button" id="clearBtn">Clear</button>
+    </div>
+  </form>
+
+  <div id="result" aria-live="polite"></div>
+
+  <script>
+    const form = document.getElementById('calcForm');
+    const aEl = document.getElementById('a');
+    const bEl = document.getElementById('b');
+    const opEl = document.getElementById('op');
+    const resultEl = document.getElementById('result');
+    const clearBtn = document.getElementById('clearBtn');
+
+    function formatNumber(n) {
+      // Keep numbers readable; trim trailing zeros
+      if (!Number.isFinite(n)) return String(n);
+      const s = n.toString();
+      return s.length > 14 ? n.toPrecision(12).replace(/\.?0+$/, '') : s;
+    }
+
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+
+      const aRaw = aEl.value;
+      const bRaw = bEl.value;
+
+      if (aRaw === '' || bRaw === '') {
+        resultEl.innerHTML = '<span class="error">Please enter both numbers.</span>';
+        return;
+      }
+
+      const a = Number(aRaw);
+      const b = Number(bRaw);
+      const op = opEl.value;
+
+      let out;
+
+      switch (op) {
+        case '+': out = a + b; break;
+        case '-': out = a - b; break;
+        case '*': out = a * b; break;
+        case '/':
+          if (b === 0) {
+            resultEl.innerHTML = '<span class="error">Error: Division by zero.</span>';
+            return;
+          }
+          out = a / b;
+          break;
+        default:
+          resultEl.innerHTML = '<span class="error">Invalid operation.</span>';
+          return;
+      }
+
+      resultEl.textContent = `Result: ${formatNumber(out)}`;
+    });
+
+    clearBtn.addEventListener('click', () => {
+      aEl.value = '';
+      bEl.value = '';
+      opEl.value = '+';
+      resultEl.textContent = '';
+      aEl.focus();
+    });
+  </script>
+</body>
 </html>
+
+
